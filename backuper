@@ -1,0 +1,29 @@
+#!/bin/bash
+
+date=`date "+%Y_%m_%d"`;             # current date  [YYYY_mm_dd]
+days_store='3';                     # Number of backups (N last days)
+dir_open=/Backups/Data2              # directory for store backups
+sftp_bin='/usr/bin/sftp -i /home/backuper/.ssh/id_rsa -r ';
+
+mkdir -p $dir_open/$date/###nameofdirectory
+##mkdir -p $dir_open/$date/###nameofdirectory
+mkdir -p $dir_open/$date/###nameofdirectory
+##mkdir -p $dir_open/$date/###nameofdirectory
+cd $dir_open/$date/###nameofdirectory #&& mkdir ##servernameoptional
+
+echo "   ...BackUp All servers ...";
+
+##Backup for ###nameofserver
+$sftp_bin -P XXXX backuper@server:/backups/$date/  $dir_open/$date/###servername
+
+##Backup for dostupanet
+##cd $dir_open/$date/###nameofdirectory
+##$sftp_bin -P xxxx backuper@#serverIP:/Backups/$date/  $dir_open/$date/#servername
+
+cd /home/backuper
+cp backup_All.sh $dir_open/$date
+
+cd /home/#usersname/
+
+echo 'Delete old backups ...';
+find $dir_open -mtime +$days_store -delete; # store backups for N last days
