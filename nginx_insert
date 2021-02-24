@@ -1,0 +1,4 @@
+  location ~ ^/wp-json/ {
+                add_header Content-Type application/json;
+                return 200 '{ "name": "XXX", "description": "ISP Provider, Fast Internet", "url": "https://www.XXX.XXX/", "message": "REST JSON API disabled", "code": "-666" }';
+                # rewrite ^/wp-json/(.*)$ /?rest_route=$1 last;
