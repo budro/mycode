@@ -1,0 +1,20 @@
+$ cat ping.sh 
+#! /bin/bash
+
+
+while true
+do
+ping -c 2 -W 2 YOURPADDRESS
+
+if [[ $? -ne 0 ]]; then
+echo "ERROR";
+else
+echo "OK";
+vlc ./sound.mp3
+exit $ret_code
+fi
+
+
+echo "pause 10 sec"
+sleep 10
+done
