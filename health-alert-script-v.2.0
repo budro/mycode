@@ -1,0 +1,36 @@
+#! /bin/bash
+
+
+while true
+do
+a=192.168.0.15
+ping -c 2 -W 2 $a
+
+if [[ $? -ne 0 ]]; then
+echo "ERROR";
+echo "let's try again";
+else
+#echo "OK";
+echo $a >not_for_robot.txt #festival cannot voice some simbols like dots or underlines and signs '!?' 
+
+sed 's/[^[:alnum:]]\+/ /g' not_for_robot.txt >out_for_robot.txt #regular expression to delete simbols
+    b=$(cat out_for_robot.txt)
+echo "Узел " $b" больше не в дыре " >festival_robot.txt
+festival --language russian --tts festival_robot.txt #LOUD Robot speaking about nominal working switch
+echo -e  $a" ONLINE">>logping.txt;\n #adding online data to the log file
+date +%D-%T>> logping.txt;
+                        #send message to work jabber clients user1, user2, user3, user4
+ 
+  wget -O /dev/null "https://jabber-server-domain/sendxmpp/index.php?mode=silent&user=user1&theme=myscript&msg=Status:%20$a%20UP" 
+   wget -O /dev/null "https://jabber-server-domain/sendxmpp/index.php?mode=silent&user=user2&theme=myscript&msg=Status:%20$a%20UP"
+    wget -O /dev/null "https://jabber-server-domain/sendxmpp/index.php?mode=silent&user=user3&theme=myscript&msg=Status:%20$a%20UP"
+     wget -O /dev/null "https://jabber-server-domain/sendxmpp/index.php?mode=silent&user=user4&theme=myscript&msg=Status:%20$a%20UP"
+
+#vlc ./sound.mp3 #additionaly to play some arhaic music
+exit $ret_code
+fi
+
+
+echo "pause 10 sec"
+sleep 10
+done
