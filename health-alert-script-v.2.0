@@ -11,7 +11,7 @@ echo "ERROR";
 echo "let's try again";
 else
 #echo "OK";
-echo $a >not_for_robot.txt #festival cannot voice some simbols like dots or underlines and signs '!?' 
+echo $a >not_for_robot.txt #festival cannot voice some simbols like  underlines and signs '!?' 
 
 sed 's/[^[:alnum:]]\+/ /g' not_for_robot.txt >out_for_robot.txt #regular expression to delete simbols
     b=$(cat out_for_robot.txt)
