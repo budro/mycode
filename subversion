@@ -1,1 +1,28 @@
+/etc/apache2/mods-available:
+в конец этого файла добавлено:
+<Location /svn>
+    DAV svn
+    SVNParentPath /var/lib/svn
+    AuthzSVNAccessFile /var/lib/svn/docs/conf/authz
+        AuthType Basic
+    AuthName "Subversion Repository"
+#    AuthUserFile /etc/apache2/dav_svn.password
+ AuthUserFile /var/lib/svn/docs/conf/passwd
 
+    Require valid-user
+
+</Location>
+
+
+содержимое /var/lib/svn/docs/conf/passwd
+user:$g4r1$8gsdf6LnSddyvETHlvbvb)4566PFbcOO8oAfw2KJ4yL89ettert/
+user1:$g4r1$8gsdf6LnSddyvETHlvbvb)4566PFbcOO8oAfw2KJ4yL89ettert/
+
+содержимое 
+AuthzSVNAccessFile /var/lib/svn/docs/conf/authz
+
+
+[/]
+user = rw
+user1 = rw
+* =
