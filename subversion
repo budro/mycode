@@ -26,3 +26,8 @@ AuthzSVNAccessFile /var/lib/svn/docs/conf/authz
 user = rw
 user1 = rw
 * =
+
+В  /var/lib/svn/docs/conf/svnserve.conf раскомментировано: 
+anon-access = read
+auth-access = write
+password-sb = passwd
