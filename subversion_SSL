@@ -1,0 +1,73 @@
+<Location /svn>
+    DAV svn
+    SVNParentPath /var/lib/svn
+    AuthzSVNAccessFile /var/lib/svn/authz
+        AuthType Basic
+    AuthName "Subversion Repository"
+    AuthUserFile /etc/apache2/dav_svn.password
+# AuthUserFile /var/lib/svn/docs/conf/passwd
+    SSLRequireSSL
+    Require valid-user
+    ErrorDocument 404 default
+</Location>
+
+
+********************
+# cat default-ssl.conf
+<IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+                ServerAdmin webmaster@localhost
+                ServerName 192.168.xxx.yyy
+                DocumentRoot /var/www/html
+
+
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+
+                SSLEngine on
+
+                SSLCertificateFile      /etc/ssl/certs/apache-selfsigned.crt
+                SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+
+
+
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+
+        </VirtualHost>
+</IfModule>
+********************
+
+apt-get install apache2-utils
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+touch ssl-params.conf
+
+# cat ssl-params.conf
+SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
+SSLProtocol All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+SSLHonorCipherOrder On
+# Disable preloading HSTS for now.  You can use the commented out header line that includes
+# the "preload" directive if you understand the implications.
+# Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+Header always set X-Frame-Options DENY
+Header always set X-Content-Type-Options nosniff
+# Requires Apache >= 2.4
+SSLCompression off
+SSLUseStapling on
+SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
+# Requires Apache >= 2.4.11
+SSLSessionTickets Off
+********************
+
+a2enmod headers
+a2ensite default-ssl
+apache2ctl restart
+
+
+
+
